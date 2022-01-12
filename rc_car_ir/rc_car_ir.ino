@@ -1,8 +1,8 @@
 #include <IRLibAll.h>
 
 //#define IR_INFO
-//#define JOYSTICK
-#define TANK
+#define JOYSTICK
+//#define TANK
 
 #define LEFT_UP_COMMAND     0x2FDD827
 #define LEFT_DOWN_COMMAND   0x2FDF807
@@ -14,12 +14,14 @@
 #define FORWARD_COMMAND     0x2FDD827
 #define BACKWARD_COMMAND    0x2FDF807
 #define STOP_COMMAND        0x2FD847B
+#define HORN_COMMAND        0x2FD08F7
 
 #define IR_PIN      3
 #define LED_LEFT    2
 #define LED_RIGHT   6
 #define MOTOR_PLUS  5
 #define MOTOR_MINUS 4
+#define HORN_PIN    9
 
 #define MOTOR_LEFT  1
 #define MOTOR_RIGHT 2
@@ -41,6 +43,7 @@ void setup()
     pinMode(LED_RIGHT,   OUTPUT);
     pinMode(MOTOR_MINUS, OUTPUT);
     pinMode(MOTOR_PLUS,  OUTPUT);
+    pinMode(HORN_PIN,    OUTPUT);
 
     Serial.begin(9600);
     myReceiver.enableIRIn();
@@ -197,10 +200,15 @@ void loop()
                 angle_index = 0;
                 drive();
                 break;
+           case HORN_COMMAND:
+                avari(1);
+                analogWrite(HORN_PIN, 31);
+                break;
         }
         myReceiver.enableIRIn();
     }
     delay(500);
+    analogWrite(HORN_PIN, 0);
     avari(0);
 }
 #endif
@@ -246,10 +254,15 @@ void loop()
                 right_index = 0;
                 drive_tank();
                 break;
+           case HORN_COMMAND:
+                avari(1);
+                analogWrite(HORN_PIN, 31);
+                break;
         }
         myReceiver.enableIRIn();
     }
     delay(500);
     avari(0);
+    analogWrite(HORN_PIN, 0);
 }
 #endif 
